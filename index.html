@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:," />
+    <title>WG-Zimmer Raumplaner</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#111111" />
+    <script type="module" crossorigin src="./assets/plan-b1k4lJPK.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/three.core-CSipLhX9.js">
+    <link rel="modulepreload" crossorigin href="./assets/render-BuHhLrux.js">
+    <link rel="modulepreload" crossorigin href="./assets/camera-depth-DQMnPvfM.js">
+    <link rel="modulepreload" crossorigin href="./assets/materials-CPEfY13h.js">
+    <link rel="modulepreload" crossorigin href="./assets/BufferGeometryUtils-D9SiPaTo.js">
+    <link rel="modulepreload" crossorigin href="./assets/GLTFLoader-CGzOpIeR.js">
+    <link rel="modulepreload" crossorigin href="./assets/helpers-CFuxVDmW.js">
+    <link rel="stylesheet" crossorigin href="./assets/camera-depth-D12IChDz.css">
+    <link rel="stylesheet" crossorigin href="./assets/plan-DNCVvUhQ.css">
+  </head>
+  <body class="planner">
+    <header class="viewer-topbar">
+      <span class="brand"><span class="brand-mark" aria-hidden="true">⌂</span> WG-Zimmer Raumplaner</span>
+      <output id="viewer-status" aria-live="polite">Lade Raum…</output>
+      <div class="top-actions">
+        <button id="undo" title="Rückgängig (Strg/⌘+Z)">Rückgängig</button>
+        <button id="redo" title="Wiederholen (Strg/⌘+⇧+Z)">Wiederholen</button>
+        <button id="measure" aria-pressed="false" title="Messen (M): zwei Punkte anklicken · Esc beendet">Messen</button>
+        <button id="snap" aria-pressed="true" title="Einrasten an Wänden und Anstoßen an Möbeln an/aus (S) – Alt gedrückt halten = einmal frei bewegen">Einrasten: an</button>
+        <button id="view-3d" class="active" title="3D-Ansicht (H)">3D</button>
+        <button id="view-top" title="3D von oben (T)">Draufsicht</button>
+        <button id="view-2d" title="2D-Grundriss (P)">2D-Plan</button>
+      </div>
+    </header>
+    <aside id="sidebar" aria-label="Planer">
+      <button id="sheet-toggle" type="button" aria-expanded="false">Menü vergrößern</button>
+      <div id="hud">
+        <section class="control-section" id="layout-panel">
+          <h2>Layout <span class="section-note">mehrere Varianten speichern</span></h2>
+          <select id="layout-select" aria-label="Layout wählen"></select>
+          <div class="row wrap layout-actions">
+            <button id="layout-new" title="Neues Layout, startet mit dem Zimmer wie gescannt">Neu</button>
+            <button id="layout-copy" title="Aktuelles Layout kopieren und weiter umstellen">Kopie</button>
+            <button id="layout-rename">Umbenennen</button>
+            <button id="layout-delete" class="danger">Löschen</button>
+            <button id="layout-share" class="primary" title="Mit anderen planen">Teilen</button>
+          </div>
+          <p class="help tight" id="layout-status" role="status"></p>
+        </section>
+        <section class="control-section" id="selection-panel">
+          <h2>Auswahl <span class="section-note" id="sel-hint">Klicke ein Möbelstück an</span></h2>
+          <div id="selection" hidden>
+            <p class="sel-name"><strong id="sel-name"></strong> <span id="sel-size" class="dim"></span></p>
+            <div class="grid3">
+              <label>X (cm)<input id="sel-x" type="number" step="1"></label>
+              <label>Z (cm)<input id="sel-z" type="number" step="1"></label>
+              <label>Höhe (cm)<input id="sel-y" type="number" step="1"></label>
+            </div>
+            <label class="inline">Drehung (°)<input id="sel-rot" type="number" step="5"></label>
+            <div class="row">
+              <button data-rot="-90" title="90° links">−90°</button>
+              <button data-rot="-15" title="15° links (Q)">−15°</button>
+              <button data-rot="15" title="15° rechts (E)">+15°</button>
+              <button data-rot="90" title="90° rechts">+90°</button>
+            </div>
+            <div class="row actions">
+              <button id="sel-parent" title="Das Möbelstück wählen, auf dem dieser Gegenstand steht">Ganzes Möbel</button>
+              <button id="sel-dup" title="Duplizieren (D)">Duplizieren</button>
+              <button id="sel-del" class="danger" title="Entfernen (Entf)">Entfernen</button>
+            </div>
+            <div class="row actions">
+              <button id="sel-clear" title="Alles entfernen, was auf diesem Möbel steht oder daran hängt">Leer räumen</button>
+              <button id="sel-floor" title="Auf den Boden stellen">Auf den Boden</button>
+            </div>
+            <div id="sel-options" class="form opts" hidden></div>
+            <p class="help" id="sel-link" hidden></p>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h2>Neues Möbel <span class="section-note">Maße z. B. von IKEA</span></h2>
+          <div class="form">
+            <label>Typ<select id="cat-type"></select></label>
+            <label>Name<input id="cat-name" type="text" placeholder="z. B. IKEA KALLAX"></label>
+            <div class="grid3">
+              <label>Breite<input id="cat-w" type="number" min="1" step="1"></label>
+              <label>Tiefe<input id="cat-d" type="number" min="1" step="1"></label>
+              <label>Höhe<input id="cat-h" type="number" min="1" step="1"></label>
+            </div>
+            <p class="help tight" id="cat-hint"></p>
+            <div class="row">
+              <label class="grow">Farbe<input id="cat-color" type="color" value="#f2f1ec"></label>
+              <label class="grow">Link (optional)<input id="cat-url" type="url" placeholder="https://www.ikea.com/…"></label>
+            </div>
+            <button id="cat-add" class="primary">Ins Zimmer stellen</button>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <h2>3D-Datei <span class="section-note">.glb / .gltf</span></h2>
+          <label id="drop" class="drop">
+            <input id="glb-file" type="file" accept=".glb,.gltf,model/gltf-binary" hidden>
+            Datei hierher ziehen oder <u>auswählen</u>
+          </label>
+          <label class="inline">Breite anpassen auf (cm, optional)<input id="glb-width" type="number" min="1" step="1" placeholder="Originalgröße"></label>
+        </section>
+
+        <section class="control-section" id="custom-section" hidden>
+          <h2>Modelle <span class="section-note">nachgebaut nach Produktseite/Fotos</span></h2>
+          <div class="buttons" id="custom-list"></div>
+        </section>
+
+        <section class="control-section">
+          <h2>Im Zimmer <span class="section-note" id="item-count"></span></h2>
+          <ul id="item-list"></ul>
+        </section>
+
+        <section class="control-section" id="trash-section" hidden>
+          <h2>Entfernt <span class="section-note"><span id="trash-count"></span> · bleibt hier, bis du es zurückholst</span></h2>
+          <ul id="trash-list"></ul>
+          <button id="trash-restore" class="mini-wide">Alle zurückholen</button>
+        </section>
+
+        <section class="control-section">
+          <h2>Wände</h2>
+          <button id="white-walls" class="mini-wide" aria-pressed="false">Steinwand weiß streichen</button>
+          <p class="help tight">Bilder, Kalender, Uhr, Pinnwand und Leuchte anklicken zum Verschieben, Entfernen oder Ersetzen (z. B. durch die PS 2026 Leuchte unter „Modelle“).</p>
+        </section>
+
+        <section class="control-section">
+          <h2>Plan</h2>
+          <div class="row wrap">
+            <button id="export">Exportieren</button>
+            <button id="import">Importieren</button>
+            <input id="import-file" type="file" accept=".json,application/json" hidden>
+            <button id="clear-all">Alle Möbel leer räumen</button>
+            <button id="reset" class="danger">Alles zurücksetzen</button>
+          </div>
+          <p class="help">Änderungen werden automatisch in diesem Browser gespeichert.</p>
+        </section>
+
+        <div class="sidebar-footer">
+          <p class="help">Klicken = auswählen · Ziehen = verschieben<br>Kleinkram folgt beim Ziehen der Fläche darunter (Tisch, Schrank, Boden)<br>Shift + Ziehen = hoch / runter · Bild ↑ / ↓ = 1 cm<br>Q / E = drehen · Pfeiltasten = 1 cm schieben<br>Alt = frei bewegen · S = Einrasten an/aus<br>Entf = entfernen · D = duplizieren · Esc = abwählen<br>P = 2D-Plan · H = 3D · M = Messen</p>
+        </div>
+      </div>
+    </aside>
+    <main id="viewport" aria-label="Raum">
+      <canvas id="scene"></canvas>
+      <section id="plan2d" hidden aria-label="2D-Grundriss"></section>
+      <div id="loader"><div class="bar"><div class="fill"></div></div><p>Lade… <span class="pct"></span></p></div>
+      <div id="toast" role="status" hidden></div>
+      <div id="measure-labels" aria-live="polite"></div>
+      <div id="measure-bar" hidden>
+        <span class="seg"><button id="mk-line" class="on" title="Abstand zwischen zwei Punkten">Strecke</button><button id="mk-area" title="Fläche: Eckpunkte anklicken, ersten Punkt erneut anklicken oder Enter zum Schließen">Fläche</button></span>
+        <span id="measure-hint">Ersten Punkt anklicken</span>
+        <button id="measure-clear">Messungen löschen</button>
+        <button id="measure-done">Fertig</button>
+      </div>
+    </main>
+  </body>
+</html>
