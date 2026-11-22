@@ -7,7 +7,7 @@
     <title>WG-Zimmer Raumplaner</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#111111" />
-    <script type="module" crossorigin src="./assets/plan-b1k4lJPK.js"></script>
+    <script type="module" crossorigin src="./assets/plan-6vNKkXIc.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/three.core-CSipLhX9.js">
     <link rel="modulepreload" crossorigin href="./assets/render-BuHhLrux.js">
     <link rel="modulepreload" crossorigin href="./assets/camera-depth-DQMnPvfM.js">
@@ -16,10 +16,11 @@
     <link rel="modulepreload" crossorigin href="./assets/GLTFLoader-CGzOpIeR.js">
     <link rel="modulepreload" crossorigin href="./assets/helpers-CFuxVDmW.js">
     <link rel="stylesheet" crossorigin href="./assets/camera-depth-D12IChDz.css">
-    <link rel="stylesheet" crossorigin href="./assets/plan-DNCVvUhQ.css">
+    <link rel="stylesheet" crossorigin href="./assets/plan-DbAYIhgM.css">
   </head>
   <body class="planner">
     <header class="viewer-topbar">
+      <button id="menu-toggle" class="menu-toggle" aria-pressed="true" aria-controls="sidebar" title="Menü ein- und ausblenden (B)"><span aria-hidden="true">☰</span> <span class="lbl">Menü</span></button>
       <span class="brand"><span class="brand-mark" aria-hidden="true">⌂</span> WG-Zimmer Raumplaner</span>
       <output id="viewer-status" aria-live="polite">Lade Raum…</output>
       <div class="top-actions">
@@ -112,6 +113,10 @@
 
         <section class="control-section">
           <h2>Im Zimmer <span class="section-note" id="item-count"></span></h2>
+          <div class="row wrap list-actions">
+            <button id="clear-all" title="Alles, was auf Möbeln steht, abräumen – kommt beim zweiten Klick genau an seinen Platz zurück">Alle Möbel leer räumen</button>
+            <button id="remove-all" class="danger" title="Alles aus dem Zimmer nehmen – über „Entfernt“ oder „Rückgängig“ zurückholbar">Alles entfernen</button>
+          </div>
           <ul id="item-list"></ul>
         </section>
 
@@ -133,7 +138,6 @@
             <button id="export">Exportieren</button>
             <button id="import">Importieren</button>
             <input id="import-file" type="file" accept=".json,application/json" hidden>
-            <button id="clear-all">Alle Möbel leer räumen</button>
             <button id="reset" class="danger">Alles zurücksetzen</button>
           </div>
           <p class="help">Änderungen werden automatisch in diesem Browser gespeichert.</p>
@@ -149,6 +153,11 @@
       <section id="plan2d" hidden aria-label="2D-Grundriss"></section>
       <div id="loader"><div class="bar"><div class="fill"></div></div><p>Lade… <span class="pct"></span></p></div>
       <div id="toast" role="status" hidden></div>
+      <div id="sel-float" hidden>
+        <button id="float-up" title="Das ganze Möbelstück wählen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 11l6-6 6 6"/></svg><span class="sr">Ganzes Möbel</span></button>
+        <button id="float-rot" title="90° drehen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></svg><span class="sr">Drehen</span></button>
+        <button id="float-del" class="del" title="Entfernen (Entf)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg><span class="sr">Entfernen</span></button>
+      </div>
       <div id="measure-labels" aria-live="polite"></div>
       <div id="measure-bar" hidden>
         <span class="seg"><button id="mk-line" class="on" title="Abstand zwischen zwei Punkten">Strecke</button><button id="mk-area" title="Fläche: Eckpunkte anklicken, ersten Punkt erneut anklicken oder Enter zum Schließen">Fläche</button></span>
