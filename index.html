@@ -7,7 +7,7 @@
     <title>WG-Zimmer Raumplaner</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#111111" />
-    <script type="module" crossorigin src="./assets/plan-G8M8JFMx.js"></script>
+    <script type="module" crossorigin src="./assets/plan-C90wtka2.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/three.core-CSipLhX9.js">
     <link rel="modulepreload" crossorigin href="./assets/render-CVHeaJOw.js">
     <link rel="modulepreload" crossorigin href="./assets/camera-depth-DQMnPvfM.js">
@@ -16,14 +16,14 @@
     <link rel="modulepreload" crossorigin href="./assets/GLTFLoader-CGzOpIeR.js">
     <link rel="modulepreload" crossorigin href="./assets/helpers-CFuxVDmW.js">
     <link rel="stylesheet" crossorigin href="./assets/camera-depth-D12IChDz.css">
-    <link rel="stylesheet" crossorigin href="./assets/plan-BQlpS2BZ.css">
+    <link rel="stylesheet" crossorigin href="./assets/plan-CVHt7rTt.css">
   </head>
   <body class="planner">
     <header class="viewer-topbar">
       <button id="menu-toggle" class="menu-toggle" aria-pressed="true" aria-controls="sidebar" title="Menü ein- und ausblenden (B)"><span aria-hidden="true">☰</span> <span class="lbl">Menü</span></button>
       <button id="picker-open" class="picker-btn" aria-controls="picker" aria-expanded="false" title="Möbel hinzufügen: aus deinem Zimmer, IKEA oder nach Maß"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Möbel</span></button>
       <div class="layout-wrap">
-        <button id="layout-btn" aria-haspopup="true" aria-expanded="false" aria-controls="layout-pop" title="Layouts: wechseln, neu, kopieren, teilen"><span class="dim">Layout</span> <strong id="layout-name">…</strong> <span aria-hidden="true">▾</span></button>
+        <button id="layout-btn" aria-haspopup="true" aria-expanded="false" aria-controls="layout-pop" title="Layouts: wechseln, neu, kopieren, teilen"><svg class="layers" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5"/></svg><span class="dim">Layout</span> <strong id="layout-name">…</strong> <span aria-hidden="true">▾</span></button>
         <div id="layout-pop" hidden>
           <select id="layout-select" aria-label="Layout wählen"></select>
           <div class="row wrap layout-actions">
@@ -44,6 +44,7 @@
           <button id="view-3d" class="active" title="3D-Ansicht (H)">3D</button>
           <button id="view-top" title="3D von oben (T)">Oben</button>
           <button id="view-2d" title="2D-Grundriss (P)">2D</button>
+          <button id="view-walk" title="Als Person durch den Raum laufen (L)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0M9 21l2-6 2.5 2.5V21M8 11l3-3h2l2 3 2.5 1M11 8l-1.5 5 3.5 2"/></svg><span class="lbl">Laufen</span></button>
         </span>
       </div>
     </header>
@@ -119,8 +120,14 @@
       <section id="plan2d" hidden aria-label="2D-Grundriss"></section>
       <div id="loader"><div class="bar"><div class="fill"></div></div><p>Lade… <span class="pct"></span></p></div>
       <div id="toast" role="status" hidden></div>
+      <div id="walk-pad" hidden aria-label="Laufen: ziehen zum Gehen und Drehen"><span class="knob"></span></div>
       <div id="sel-float" hidden>
         <button id="float-up" title="Das ganze Möbelstück wählen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V6M6 11l6-6 6 6"/></svg><span class="sr">Ganzes Möbel</span></button>
+        <span class="lift" hidden>
+          <button id="float-hup" title="Höher (1 cm, gedrückt halten)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg><span class="sr">Höher</span></button>
+          <output id="float-h" title="Höhe über dem Boden"></output>
+          <button id="float-hdown" title="Tiefer (1 cm, gedrückt halten)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg><span class="sr">Tiefer</span></button>
+        </span>
         <button id="float-rot" title="90° drehen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></svg><span class="sr">Drehen</span></button>
         <button id="float-del" class="del" title="Entfernen (Entf)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg><span class="sr">Entfernen</span></button>
       </div>
