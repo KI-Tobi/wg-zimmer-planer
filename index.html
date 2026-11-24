@@ -7,7 +7,7 @@
     <title>WG-Zimmer Raumplaner</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#111111" />
-    <script type="module" crossorigin src="./assets/plan-DbinwSPB.js"></script>
+    <script type="module" crossorigin src="./assets/plan-D-Qjdtnf.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/three.core-CSipLhX9.js">
     <link rel="modulepreload" crossorigin href="./assets/render-CVHeaJOw.js">
     <link rel="modulepreload" crossorigin href="./assets/camera-depth-DQMnPvfM.js">
@@ -16,7 +16,7 @@
     <link rel="modulepreload" crossorigin href="./assets/GLTFLoader-CGzOpIeR.js">
     <link rel="modulepreload" crossorigin href="./assets/helpers-CFuxVDmW.js">
     <link rel="stylesheet" crossorigin href="./assets/camera-depth-D12IChDz.css">
-    <link rel="stylesheet" crossorigin href="./assets/plan-HPTmxQ8K.css">
+    <link rel="stylesheet" crossorigin href="./assets/plan-B3H0ewjA.css">
   </head>
   <body class="planner">
     <header class="viewer-topbar">
@@ -148,6 +148,7 @@
       <div class="picker-tabs" role="tablist">
         <button role="tab" data-tab="own" aria-selected="true">Dein Zimmer <small id="trash-count"></small></button>
         <button role="tab" data-tab="ikea" aria-selected="false">IKEA &amp; Deko</button>
+        <button role="tab" data-tab="rugs" aria-selected="false">Teppiche</button>
         <button role="tab" data-tab="size" aria-selected="false">Nach Maß</button>
       </div>
       <div class="picker-body">
@@ -158,6 +159,9 @@
         </section>
         <section data-pane="ikea" id="custom-section" hidden>
           <div id="custom-list"></div>
+        </section>
+        <section data-pane="rugs" hidden>
+          <div id="rug-list" class="model-list"></div>
         </section>
         <section data-pane="size" hidden>
           <h3>Eigenes Möbel nach Maß</h3>
